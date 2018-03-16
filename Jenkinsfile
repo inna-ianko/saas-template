@@ -99,7 +99,7 @@ node {
   }
   //
   stage('Deploy') {
-    sh 'sudo ./up.sh -d'
+    sh './up.sh -d'
   }
 
   stage("Integration testing") {

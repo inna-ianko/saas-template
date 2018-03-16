@@ -122,8 +122,8 @@ node {
     allure includeProperties: false, jdk: '', results: [[path: 'out_docker_results']]
   }
 
-  stage('Request pproval for deploy to Stage') {
-a
+  stage('Request approval for deploy to Stage') {
+
     script {
         timeout(time:10, unit:'MINUTES') {
             while (true) {

@@ -50,7 +50,7 @@ node {
   }  
   //
   stage('Build & Unit tests') {
-    sh './down.sh' || echo 'already stop'
+    sh './down.sh || echo "already stop"'
     sh './build.sh'
   }
   //
@@ -122,8 +122,8 @@ node {
     allure includeProperties: false, jdk: '', results: [[path: 'out_docker_results']]
   }
 
-  stage('Request approval for deploy to Stage') {
-
+  stage('Request pproval for deploy to Stage') {
+a
     script {
         timeout(time:10, unit:'MINUTES') {
             while (true) {

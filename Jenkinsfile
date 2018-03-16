@@ -98,7 +98,7 @@ node {
     //archiveArtifacts artifacts: 'mobile/platforms/android/build/outputs/apk/*.apk'
   }
   //
-  stage('Deploy') {
+  stage('Deploy to QA') {
     sh './up.sh -d'
   }
 
@@ -113,13 +113,14 @@ node {
 
         mkdir out_docker_results || echo 'out_docker_results dir exists'
 
-        docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA_ENV" -e "TEST_TYPE=api" -e "RESULTS_FOLDER=outputs" -i automation_demo /bin/bash -c "pytest test/api/test_healthcheck.py --alluredir /out"
+        docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA" -e -i automation_demo /bin/bash -c "pytest test/api/test_healthcheck.py --alluredir /out"
 
-        docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA_ENV" -e "TEST_TYPE=api" -e "RESULTS_FOLDER=outputs" -i automation_demo /bin/bash -c "pytest test/api/contacts --alluredir /out"
+        docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA" -e -i automation_demo /bin/bash -c "pytest test/api/contacts --alluredir /out"
     ''')
 
     allure includeProperties: false, jdk: '', results: [[path: 'out_docker_results']]
 
+    sh './down.sh'
   }
 
   stage('Request approval for deploy to Stage') {
@@ -135,6 +136,10 @@ node {
         }
     }
 
+  }
+
+  stage('Deploy to Stage') {
+    // TBD
   }
 
 }

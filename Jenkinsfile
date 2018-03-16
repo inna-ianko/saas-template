@@ -50,6 +50,7 @@ node {
   }  
   //
   stage('Build & Unit tests') {
+    sh './down.sh' || echo 'already stop'
     sh './build.sh'
   }
   //
@@ -119,8 +120,6 @@ node {
     ''')
 
     allure includeProperties: false, jdk: '', results: [[path: 'out_docker_results']]
-
-    sh './down.sh'
   }
 
   stage('Request approval for deploy to Stage') {

@@ -104,7 +104,7 @@ node {
 
   stage("Integration testing") {
 
-    git url: 'https://github.com/auto-qa-course/python-framework-example.git', branch: 'master'
+    git url: 'https://github.com/auto-qa-course/python-framework-example.git', branch: 'lesson3'
 
     sh('''
         rm out_docker_results/**/*.json || echo 'no json files'

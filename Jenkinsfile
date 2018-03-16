@@ -103,38 +103,38 @@ node {
   }
 
   stage("Integration testing") {
-        steps {
-            git url: 'https://github.com/auto-qa-course/python-framework-example.git', branch: 'master'
 
-            sh('''
-                rm out_docker_results/**/*.json || echo 'no json files'
+    git url: 'https://github.com/auto-qa-course/python-framework-example.git', branch: 'master'
 
-                docker build -t automation_demo .
+    sh('''
+        rm out_docker_results/**/*.json || echo 'no json files'
 
-                mkdir out_docker_results || echo 'out_docker_results dir exists'
+        docker build -t automation_demo .
 
-                docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA_ENV" -e "TEST_TYPE=api" -e "RESULTS_FOLDER=outputs" -i automation_demo /bin/bash -c "pytest test/api/test_healthcheck.py --alluredir /out"
+        mkdir out_docker_results || echo 'out_docker_results dir exists'
 
-                docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA_ENV" -e "TEST_TYPE=api" -e "RESULTS_FOLDER=outputs" -i automation_demo /bin/bash -c "pytest test/api/contacts --alluredir /out"
-            ''')
+        docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA_ENV" -e "TEST_TYPE=api" -e "RESULTS_FOLDER=outputs" -i automation_demo /bin/bash -c "pytest test/api/test_healthcheck.py --alluredir /out"
 
-            allure includeProperties: false, jdk: '', results: [[path: 'out_docker_results']]
-        }
+        docker run -v $(pwd)/out_docker_results:/out:rw -e "ENVIRONMENT=$QA_ENV" -e "TEST_TYPE=api" -e "RESULTS_FOLDER=outputs" -i automation_demo /bin/bash -c "pytest test/api/contacts --alluredir /out"
+    ''')
+
+    allure includeProperties: false, jdk: '', results: [[path: 'out_docker_results']]
+
   }
 
   stage('Request approval for deploy to Stage') {
-        steps {
-            script {
-                timeout(time:10, unit:'MINUTES') {
-                    while (true) {
-                        userPasswordInput = input(id: 'userPasswordInput',
-                            message: 'Please approve deploy to Stage. Enter password to proceed.',
-                            parameters: [[$class: 'StringParameterDefinition', defaultValue: '',  name: 'Password']])
-                        if (userPasswordInput=='Yes') { break }
-                    }
-                }
+
+    script {
+        timeout(time:10, unit:'MINUTES') {
+            while (true) {
+                userPasswordInput = input(id: 'userPasswordInput',
+                    message: 'Please approve deploy to Stage. Enter password to proceed.',
+                    parameters: [[$class: 'StringParameterDefinition', defaultValue: '',  name: 'Password']])
+                if (userPasswordInput=='Yes') { break }
             }
         }
+    }
+
   }
 
 }
